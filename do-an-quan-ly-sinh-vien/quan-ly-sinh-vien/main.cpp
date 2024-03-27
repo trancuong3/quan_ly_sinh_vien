@@ -1,8 +1,7 @@
 #include <iostream>
-#include <string>
-#include <cmath>
 #include <vector>
 #include <algorithm>
+#include <iomanip>
 
 using namespace std;
 
@@ -11,10 +10,6 @@ using namespace std;
 #define RED     "\033[31m"
 #define GREEN   "\033[32m"
 #define YELLOW  "\033[33m"
-#define BLUE    "\033[34m"
-#define MAGENTA "\033[35m"
-#define CYAN    "\033[36m"
-#define WHITE   "\033[37m"
 
 class Student
 {
@@ -25,37 +20,37 @@ private:
     double math;
     double english;
     double physics;
-    double mediumscore;
+    double mediumScore;
 
 public:
     Student() {}
     Student(int id, string n, int a, double m, double e, double p)
         : name(n), age(a), numberofstudent(id), math(m), english(e), physics(p)
-    {
-        mediumscore = (math + english + physics) / 3;
-    }
+    {}
 
-    void setnumberofstudent(int id)
+    void setNumberOfStudent(int id)
     {
         numberofstudent = id;
     }
 
-    int getnumberofstudent()
+    int getNumberOfStudent()
     {
         return numberofstudent;
     }
-    void setname(string n)
+
+    void setName(string n)
     {
-        name=n;
+        name = n;
     }
-    string getname()
+
+    string getName()
     {
         return name;
     }
 
-    void checkpass() const
+    void checkPass() const
     {
-        if (mediumscore > 4)
+        if (mediumScore > 4)
         {
             cout << GREEN << "pass" << RESET;
         }
@@ -65,62 +60,91 @@ public:
         }
     }
 
-    void display() const
+    void calculateMediumScore()
     {
-        cout << "id : " << numberofstudent << endl;
-        cout << "name student: " << name << endl;
-        cout << "age : " << age << endl;
-        cout << "math scores : " << math << endl;
-        cout << "english scores : " << english << endl;
-        cout << "physics scores : " << physics << endl;
-        cout << "type : ";
-        checkpass();
-        cout<<endl;
-        cout << "-----------------------------------------" << endl;
-        cout << endl;
+        mediumScore = (math + english + physics) / 3;
     }
-      string getLastName() const {
+
+    void displayStudent() const
+    {
+        cout << "| " << setw(2) << numberofstudent << " | " << setw(12) << name << " | " << setw(3) << age << " | ";
+        setColorByScore(math);
+        cout << setw(10) << math << RESET << " | ";
+        setColorByScore(english);
+        cout << setw(13) << english << RESET << " | ";
+        setColorByScore(physics);
+        cout << setw(12) << physics << RESET << " | ";
+        checkPass();
+        cout << setw(11) << " |" << endl;
+    }
+
+    string getLastName() const
+    {
         string lastName = "";
         bool foundSpace = false;
-        for (int i = name.length() - 1; i >= 0; i--) {
-            if (name[i] == ' ') {
+        for (int i = name.length() - 1; i >= 0; i--)
+        {
+            if (name[i] == ' ')
+            {
                 foundSpace = true;
                 return lastName;
-            } else {
+            }
+            else
+            {
                 lastName = name[i] + lastName;
             }
         }
-        if (lastName == "") {
+        if (lastName == "")
+        {
             return name;
         }
         return lastName;
     }
+
+private:
+    void setColorByScore(double score) const
+    {
+        if (score < 4)
+        {
+            cout << RED;
+        }
+        else if (score >= 4 && score < 7)
+        {
+            cout << YELLOW;
+        }
+        else
+        {
+            cout << GREEN;
+        }
+    }
 };
 
-class Studentmanagement
+class StudentManagement
 {
 private:
     vector<Student> students;
 
 public:
-      static bool compareNames(const Student& a, const Student& b) {
-        if (a.getLastName() < b.getLastName()) {
-            return true;
-        } else {
-            return false;
-        }
+    static bool compareNames(const Student &a, const Student &b)
+    {
+        return a.getLastName() < b.getLastName();
     }
-    void addstudent(Student& s)
+
+    void addStudent(Student &s)
     {
         students.push_back(s);
     }
 
-    void displaystudent()
+    void displayStudents()
     {
-        for (Student& s1 : students)
+        cout << "-------------------------------------------------------------------------------------------------" << endl;
+        cout << "| ID |     Name     | Age | Math Score | English Score | Physics Score|    Type           |" << endl;
+        cout << "-------------------------------------------------------------------------------------------------" << endl;
+        for (Student &s1 : students)
         {
-            s1.display();
+            s1.displayStudent();
         }
+        cout << "-------------------------------------------------------------------------------------------------" << endl;
     }
 
     void newStudent()
@@ -147,12 +171,12 @@ public:
         cout << "Enter physics scores: ";
         cin >> physics;
 
-        Student newstudent(students.size() + 1, name, age, math, english, physics);
-        students.push_back(newstudent);
+        Student newStudent(students.size() + 1, name, age, math, english, physics);
+        students.push_back(newStudent);
         reSortList();
     }
 
-    void removestudent()
+    void removeStudent()
     {
         int numberofstudent;
         cout << "Enter student id to remove: ";
@@ -160,46 +184,51 @@ public:
 
         students.erase(students.begin() + numberofstudent - 1);
         int newid = 1;
-        for (Student& studentx : students)
+        for (Student &studentx : students)
         {
-            studentx.setnumberofstudent(newid);
+            studentx.setNumberOfStudent(newid);
             newid++;
         }
     }
- void searchname()
-{
-    string name;
-    cout << "Enter the name of the student you want to search: ";
-    cin.ignore();
-    getline(cin, name);
 
-    vector<Student> foundStudents;
-    for (Student& student : students)
-    {
-        if (student.getname() == name)
-        {
-            foundStudents.push_back(student);
-        }
-    }
-
-    if (foundStudents.empty())
-    {
-        cout << "No students found with the given name.\n";
-    }
-    else
-    {
-        for (Student& foundStudent : foundStudents)
-        {
-            foundStudent.display();
-        }
-    }
-}
-
-    void edit()
+    void searchName()
     {
         string name;
-        int age;
+        cout << "Enter the name of the student you want to search: ";
+        cin.ignore();
+        getline(cin, name);
+
+        vector<Student> foundStudents;
+        for (Student &student : students)
+        {
+            if (student.getName() == name)
+            {
+                foundStudents.push_back(student);
+            }
+        }
+
+        if (foundStudents.empty())
+        {
+            cout << "No students found with the given name.\n";
+        }
+        else
+        {
+            cout << "-------------------------------------------------------------------------------------------------" << endl;
+            cout << "| ID |     Name     | Age | Math Score | English Score | Physics Score |    Type    |" << endl;
+            cout << "-------------------------------------------------------------------------------------------------" << endl;
+            for (Student &foundStudent : foundStudents)
+            {
+                foundStudent.displayStudent();
+            }
+            cout << "-------------------------------------------------------------------------------------------------" << endl;
+        }
+    }
+
+    void editStudent()
+    {
         int id;
+        string name;
+        int age;
         double math;
         double english;
         double physics;
@@ -223,37 +252,39 @@ public:
         cout << "Enter new physics scores: ";
         cin >> physics;
 
-        Student studentedit(id, name, age, math, english, physics);
-        for (Student& st1 : students)
+        Student studentEdit(id, name, age, math, english, physics);
+        for (Student &st1 : students)
         {
-            if (st1.getnumberofstudent() == id)
+            if (st1.getNumberOfStudent() == id)
             {
-                st1 = studentedit;
+                st1 = studentEdit;
             }
         }
+        reSortList();
     }
+
     bool empty()
     {
-        if (students.size() == 0)
-            return true;
-        else
-            return false;
+        return students.empty();
     }
-     void reSortList() {
+
+    void reSortList()
+    {
         sort(students.begin(), students.end(), compareNames);
-        for (int i = 0; i < students.size(); i++) {
-            students[i]. setnumberofstudent(i + 1);
+        for (int i = 0; i < students.size(); i++)
+        {
+            students[i].setNumberOfStudent(i + 1);
         }
     }
 };
 
 int main()
 {
-    Studentmanagement manager;
+    StudentManagement manager;
     Student s1(1, "nguyen van A", 20, 4, 5, 6);
-    manager.addstudent(s1);
+    manager.addStudent(s1);
     manager.reSortList();
-    manager.displaystudent();
+    manager.displayStudents();
 
     int choose;
     do
@@ -262,7 +293,7 @@ int main()
         cout << "1) add student" << endl;
         cout << "2) remove student" << endl;
         cout << "3) edit information student" << endl;
-        cout << "4) search name student "<<endl;
+        cout << "4) search name student " << endl;
         cout << "0. Exit" << endl;
         cout << "Enter your choice: ";
         cin >> choose;
@@ -272,28 +303,23 @@ int main()
         case 1:
             manager.newStudent();
             cout << "Student added\n";
-            manager.displaystudent();
-
+            manager.displayStudents();
             break;
         case 2:
-            manager.removestudent();
+            manager.removeStudent();
             cout << "Student list after removal:\n";
-            manager.displaystudent();
-
+            manager.displayStudents();
             break;
         case 3:
-            manager.edit();
+            manager.editStudent();
             cout << "Student after edit:\n";
-            manager.displaystudent();
-         ;
+            manager.displayStudents();
             break;
         case 4:
-            manager.searchname();
-
-
+            manager.searchName();
+            break;
         }
-    }
-    while (choose != 0);
+    } while (choose != 0);
 
     return 0;
 }
