@@ -1,42 +1,48 @@
+#include <iomanip> // For setw
 #include <iostream>
+#include <string>
+#include <cmath>
 #include <vector>
 #include <algorithm>
-#include <iomanip>
 
 using namespace std;
 
 // Define ANSI color codes
-#define RESET   "\033[0m"
-#define RED     "\033[31m"
-#define GREEN   "\033[32m"
-#define YELLOW  "\033[33m"
+#define RESET "\033[0m"
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define YELLOW "\033[33m"
+#define BLUE "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN "\033[36m"
+#define WHITE "\033[37m"
 
-class Student
-{
+class Student {
 private:
     string name;
     int age;
-    int numberofstudent; // id student
+    int studentID; // id student
     double math;
     double english;
     double physics;
     double mediumScore;
-    int rank;
 
 public:
     Student() {}
     Student(int id, string n, int a, double m, double e, double p)
-        : name(n), age(a), numberofstudent(id), math(m), english(e), physics(p)
-    {}
-
-    void setNumberOfStudent(int id)
+        : name(n), age(a), studentID(id), math(m), english(e), physics(p)
     {
-        numberofstudent = id;
+        mediumScore = (math + english + physics) / 3;
     }
 
-    int getNumberOfStudent()
+    void setStudentID(int id)
     {
-        return numberofstudent;
+        studentID = id;
+    }
+
+    int getStudentID() const
+    {
+        return studentID;
     }
 
     void setName(string n)
@@ -44,7 +50,7 @@ public:
         name = n;
     }
 
-    string getName()
+    string getName() const
     {
         return name;
     }
@@ -53,41 +59,20 @@ public:
     {
         if (mediumScore > 4)
         {
-            cout << GREEN << "pass   " << RESET;
+            cout << GREEN << "PASS " << RESET;
         }
         else
         {
-            cout << RED << "not pass" << RESET;
+            cout << RED << "NOT PASS  " << RESET;
         }
-    }
-
-    void calculateRank(const vector<Student>& studentsList) {
-        int countHigher = 0;
-        for (const Student &student : studentsList) {
-            if (student.mediumScore < mediumScore) {
-                countHigher++;
-            }
-        }
-        rank = studentsList.size() - countHigher; // Correctly calculates the rank
-    }
-
-    void calculateMediumScore()
-    {
-        mediumScore = (math + english + physics) / 3;
     }
 
     void displayStudent() const
     {
-        cout << "| " << setw(2) << numberofstudent << " | " << setw(12) << name << " | " << setw(3) << age << " | ";
-        setColorByScore(math);
-        cout << setw(10) << math << RESET << " | ";
-        setColorByScore(english);
-        cout << setw(13) << english << RESET << " | ";
-        setColorByScore(physics);
-        cout << setw(12) << physics << RESET << " | ";
-        cout << setw(6) << rank << " | "; // Display calculated rank
+        cout << "| " << setw(3) << studentID << " | " << setw(18) << name << " | " << setw(3) << age << " | "
+             << setw(10) << math << " | " << setw(13) << english << " | " << setw(13) << physics << " | ";
         checkPass();
-        cout << setw(11) << " |" << endl;
+        cout << setw(10 - (mediumScore > 4 ? 3 : 8)) << " |" << endl;
     }
 
     string getLastName() const
@@ -112,27 +97,9 @@ public:
         }
         return lastName;
     }
-
-private:
-    void setColorByScore(double score) const
-    {
-        if (score < 4)
-        {
-            cout << RED;
-        }
-        else if (score >= 4 && score < 7)
-        {
-            cout << YELLOW;
-        }
-        else
-        {
-            cout << GREEN;
-        }
-    }
 };
 
-class StudentManagement
-{
+class StudentManagement {
 private:
     vector<Student> students;
 
@@ -147,23 +114,20 @@ public:
         students.push_back(s);
     }
 
-  void displayStudents()
-{
-    cout << "---------------------------------------------------------------------------------------------------" << endl;
-    // In ra khoảng trắng để căn giữa "List Students"
-    cout << setw(60) << "List Students" << endl;
-    cout << "---------------------------------------------------------------------------------------------------" << endl;
-    cout << "| ID |     Name     | Age | Math Score | English Score | Physics Score | Rank  |        Type      |" << endl;
-    cout << "---------------------------------------------------------------------------------------------------" << endl;
-    for (Student &s1 : students)
+    void displayStudents()
     {
-        s1.calculateMediumScore();
-        s1.calculateRank(students); // Calculate rank for each student
-        s1.displayStudent();
+        cout << "---------------------------------------------------------------------------------------------------" << endl;
+        // Print blank space to center "List Students"
+        cout << "| " << setw(3) << "ID" << " | " << setw(18) << "Name" << " | " << setw(3) << "Age" << " | "
+             << setw(10) << "Math" << " | " << setw(13) << "English" << " | " << setw(13) << "Physics" << " | "
+             << setw(10) << "Type" << " |" << endl;
+        cout << "---------------------------------------------------------------------------------------------------" << endl;
+        for (Student &s : students)
+        {
+            s.displayStudent();
+        }
+        cout << "---------------------------------------------------------------------------------------------------" << endl;
     }
-    cout << "----------------------------------------------------------------------------------------------------" << endl;
-}
-
 
     void newStudent()
     {
@@ -196,16 +160,16 @@ public:
 
     void removeStudent()
     {
-        int numberofstudent;
+        int studentID;
         cout << "Enter student id to remove: ";
-        cin >> numberofstudent;
+        cin >> studentID;
 
-        students.erase(students.begin() + numberofstudent - 1);
-        int newid = 1;
-        for (Student &studentx : students)
+        students.erase(students.begin() + studentID - 1);
+        int newID = 1;
+        for (Student &student : students)
         {
-            studentx.setNumberOfStudent(newid);
-            newid++;
+            student.setStudentID(newID);
+            newID++;
         }
     }
 
@@ -231,16 +195,16 @@ public:
         }
         else
         {
-            cout << "-------------------------------------------------------------------------------------------------" << endl;
-            cout << "| ID |     Name     | Age | Math Score | English Score | Physics Score | Rank |    Type    |" << endl;
-            cout << "-------------------------------------------------------------------------------------------------" << endl;
+            cout << "---------------------------------------------------------------------------------------------------" << endl;
+            cout << "| " << setw(3) << "ID" << " | " << setw(15) << "Name" << " | " << setw(3) << "Age" << " | "
+                 << setw(10) << "Math" << " | " << setw(13) << "English" << " | " << setw(13) << "Physics" << " | "
+                 << setw(10) << "Type" << " |" << endl;
+            cout << "---------------------------------------------------------------------------------------------------" << endl;
             for (Student &foundStudent : foundStudents)
             {
-                foundStudent.calculateMediumScore();
-                foundStudent.calculateRank(students); // Calculate rank for found students
                 foundStudent.displayStudent();
             }
-            cout << "-------------------------------------------------------------------------------------------------" << endl;
+            cout << "---------------------------------------------------------------------------------------------------" << endl;
         }
     }
 
@@ -275,7 +239,7 @@ public:
         Student studentEdit(id, name, age, math, english, physics);
         for (Student &st1 : students)
         {
-            if (st1.getNumberOfStudent() == id)
+            if (st1.getStudentID() == id)
             {
                 st1 = studentEdit;
             }
@@ -293,7 +257,7 @@ public:
         sort(students.begin(), students.end(), compareNames);
         for (int i = 0; i < students.size(); i++)
         {
-            students[i].setNumberOfStudent(i + 1);
+            students[i].setStudentID(i + 1);
         }
     }
 };
@@ -301,33 +265,26 @@ public:
 int main()
 {
     StudentManagement manager;
-    Student s1(1, "Nguyen Van A", 20, 4, 5, 6);
+    Student s1(1, "Nguyen Van An", 20, 4, 2, 1);
     manager.addStudent(s1);
-    Student s2(2, "Le Thi B", 21, 7, 8, 9);
+    Student s2(2, "Nguyen Van BA", 21, 9, 9, 9);
     manager.addStudent(s2);
-    Student s3(3, "Tran Van C", 22, 6, 8, 7);
-    manager.addStudent(s3);
-    Student s4(4, "Hoang Thi D", 19, 5, 6, 7);
-    manager.addStudent(s4);
-    Student s5(5, "Pham Van E", 20, 8, 9, 9);
-    manager.addStudent(s5);
     manager.reSortList();
     manager.displayStudents();
 
     int choose;
     do
     {
-     cout << "\n\n---------------------------------------------" << endl;
-cout << "|          Student Management System         |" << endl;
-cout << "|--------------------------------------------|  " << endl;
-cout << "| Options:                                   |" << endl;
-cout << "| 1. Add Student                             |" << endl;
-cout << "| 2. Remove Student                          |" << endl;
-cout << "| 3. Edit Student Information                |" << endl;
-cout << "| 4. Search Student by Name                  |" << endl;
-cout << "| 0. Exit                                    |" << endl;
-cout << "---------------------------------------------" << endl;
-cout << "Enter your choice: ";
+        cout << "\n\n---------------------------------------------" << endl;
+        cout << "|          Student Management System         |" << endl;
+        cout << "|--------------------------------------------|  " << endl;
+        cout << "| Options:                                   |" << endl;
+        cout << "| 1. Add Student                             |" << endl;
+        cout << "| 2. Remove Student                          |" << endl;
+        cout << "| 3. Edit Student Information                |" << endl;
+        cout << "| 4. Search Student by Name                  |" << endl;
+        cout << "| 0. Exit                                    |" << endl;
+        cout << "---------------------------------------------" << endl;
 
         cin >> choose;
 
