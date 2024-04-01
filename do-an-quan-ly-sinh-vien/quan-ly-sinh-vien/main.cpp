@@ -307,7 +307,7 @@ manager.addStudent(s10);
 
     int choose;
     do {
-        cout << "\n\n---------------------------------------------" << endl;
+        cout << "\n---------------------------------------------" << endl;
         cout << "|          Student Management System         |" << endl;
         cout << "|--------------------------------------------|  " << endl;
         cout << "| Options:                                   |" << endl;
