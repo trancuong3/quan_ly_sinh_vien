@@ -1,8 +1,26 @@
 #include <algorithm>
+#include <array>
+#include <bitset>
+#include <cassert>
 #include <cmath>
-#include <iomanip>  // For setw
+#include <complex>
+#include <cstdio>
+#include <cstring>
+#include <ctime>
+#include <functional>
+#include <iomanip>
 #include <iostream>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <random>
+#include <set>
+#include <sstream>
+#include <stack>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 using namespace std;
@@ -65,23 +83,22 @@ class Student {
         }
     }
 
-   void displayStudent() const {
-    cout << "| " << setw(3) << studentID << " | " << setw(18) << name
-         << " | " << setw(3) << age << " | ";
+    void displayStudent() const {
+        cout << "| " << setw(3) << studentID << " | " << setw(18) << name
+             << " | " << setw(3) << age << " | ";
 
-    setColorByScore(math);
-    cout << setw(10) << math << RESET << " | ";
+        setColorByScore(math);
+        cout << setw(10) << math << RESET << " | ";
 
-    setColorByScore(english);
-    cout << setw(13) << english << RESET << " | ";
+        setColorByScore(english);
+        cout << setw(13) << english << RESET << " | ";
 
-    setColorByScore(physics);
-    cout << setw(13) << physics << RESET << " | ";
+        setColorByScore(physics);
+        cout << setw(13) << physics << RESET << " | ";
 
-    checkPass();
-    cout << setw(10 - (mediumScore > 4 ? 3 : 8)) << " |" << endl;
-}
-
+        checkPass();
+        cout << setw(10 - (mediumScore > 4 ? 3 : 8)) << " |" << endl;
+    }
 
     string getLastName() const {
         string lastName = "";
@@ -99,18 +116,12 @@ class Student {
         }
         return lastName;
     }
-    void setColorByScore(double score) const
-    {
-        if (score < 4)
-        {
+    void setColorByScore(double score) const {
+        if (score < 4) {
             cout << RED;
-        }
-        else if (score >= 4 && score < 7)
-        {
+        } else if (score >= 4 && score < 7) {
             cout << YELLOW;
-        }
-        else
-        {
+        } else {
             cout << GREEN;
         }
     }
@@ -193,15 +204,14 @@ class StudentManagement {
         }
     }
 
-    void searchName() {
-        string name;
-        cout << "Enter the name of the student you want to search: ";
-        cin.ignore();
-        getline(cin, name);
+    void searchStudent() {
+        int id;
+        cout << "Enter the id of the student you want to search: ";
+        cin >> id;
 
         vector<Student> foundStudents;
         for (Student &student : students) {
-            if (student.getName() == name) {
+            if (student.getStudentID() == id) {
                 foundStudents.push_back(student);
             }
         }
@@ -213,13 +223,13 @@ class StudentManagement {
                     "-----------------------------------------"
                  << endl;
             cout << "| " << setw(3) << "ID"
-                 << " | " << setw(15) << "Name"
-                 << " | " << setw(3) << "Age"
-                 << " | " << setw(10) << "Math"
-                 << " | " << setw(13) << "English"
-                 << " | " << setw(13) << "Physics"
-                 << " | " << setw(10) << "Type"
-                 << " |" << endl;
+             << " | " << setw(18) << "Name"
+             << " | " << setw(3) << "Age"
+             << " | " << setw(10) << "Math"
+             << " | " << setw(13) << "English"
+             << " | " << setw(13) << "Physics"
+             << " | " << setw(10) << "Type"
+             << " |" << endl;
             cout << "----------------------------------------------------------"
                     "-----------------------------------------"
                  << endl;
@@ -280,27 +290,26 @@ class StudentManagement {
 
 int main() {
     StudentManagement manager;
-Student s1(1, "Nguyen Van An", 20, 4, 2, 1);
-manager.addStudent(s1);
-Student s2(2, "Nguyen Van BA", 21, 10, 3, 2);
-manager.addStudent(s2);
-Student s3(3, "Le Van Cuong", 22, 6, 5, 7);
-manager.addStudent(s3);
-Student s4(4, "Pham Thi Dung", 23, 9, 7, 8);
-manager.addStudent(s4);
-Student s5(5, "Hoang Van Duong", 24, 8, 9, 10);
-manager.addStudent(s5);
-Student s6(6, "Nguyen Thi Ha", 25, 6, 8, 7);
-manager.addStudent(s6);
-Student s7(7, "Tran Van Hieu", 26, 5, 6, 7);
-manager.addStudent(s7);
-Student s8(8, "Le Thi Kim", 27, 7, 8, 9);
-manager.addStudent(s8);
-Student s9(9, "Nguyen Van Lam", 28, 8, 9, 10);
-manager.addStudent(s9);
-Student s10(5, "Hoang Van Duong", 24, 8, 9, 10);
-manager.addStudent(s10);
-
+    Student s1(1, "Nguyen Van An", 20, 4, 2, 1);
+    manager.addStudent(s1);
+    Student s2(2, "Nguyen Van BA", 21, 10, 3, 2);
+    manager.addStudent(s2);
+    Student s3(3, "Le Van Cuong", 22, 6, 5, 7);
+    manager.addStudent(s3);
+    Student s4(4, "Pham Thi Dung", 23, 9, 7, 8);
+    manager.addStudent(s4);
+    Student s5(5, "Hoang Van Duong", 24, 8, 9, 10);
+    manager.addStudent(s5);
+    Student s6(6, "Nguyen Thi Ha", 25, 6, 8, 7);
+    manager.addStudent(s6);
+    Student s7(7, "Tran Van Hieu", 26, 5, 6, 7);
+    manager.addStudent(s7);
+    Student s8(8, "Le Thi Kim", 27, 7, 8, 9);
+    manager.addStudent(s8);
+    Student s9(9, "Nguyen Van Lam", 28, 8, 9, 10);
+    manager.addStudent(s9);
+    Student s10(5, "Hoang Van Duong", 24, 8, 9, 10);
+    manager.addStudent(s10);
 
     manager.reSortList();
     manager.displayStudents();
@@ -337,7 +346,7 @@ manager.addStudent(s10);
                 manager.displayStudents();
                 break;
             case 4:
-                manager.searchName();
+                manager.searchStudent();
                 break;
         }
     } while (choose != 0);
