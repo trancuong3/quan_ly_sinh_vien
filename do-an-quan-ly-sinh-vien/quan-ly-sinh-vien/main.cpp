@@ -34,6 +34,7 @@ using namespace std;
 #define MAGENTA "\033[35m"
 #define CYAN "\033[36m"
 #define WHITE "\033[37m"
+#define BOLD    "\033[1m"
 
 class Student {
    private:
@@ -77,9 +78,9 @@ class Student {
 
     void checkPass() const {
         if (mediumScore > 4) {
-            cout << GREEN << "PASS " << RESET;
+            cout <<BOLD<< GREEN << "PASS " << RESET;
         } else {
-            cout << RED << "NOT PASS  " << RESET;
+            cout <<BOLD <<RED << "NOT PASS  " << RESET;
         }
     }
 
@@ -139,10 +140,10 @@ class StudentManagement {
     void addStudent(Student &s) { students.push_back(s); }
 
     void displayStudents() {
-        cout << "--------------------------------------------------------------"
+        cout << "-------------------------------------------------------"
                 "-------------------------------------"
              << endl;
-        // Print blank space to center "List Students"
+
         cout << "| " << setw(3) << "ID"
              << " | " << setw(18) << "Name"
              << " | " << setw(3) << "Age"
@@ -151,13 +152,13 @@ class StudentManagement {
              << " | " << setw(13) << "Physics"
              << " | " << setw(10) << "Type"
              << " |" << endl;
-        cout << "--------------------------------------------------------------"
+        cout << "--------------------------------------------------------"
                 "-------------------------------------"
              << endl;
         for (Student &s : students) {
             s.displayStudent();
         }
-        cout << "--------------------------------------------------------------"
+        cout << "-------------------------------------------------------"
                 "-------------------------------------"
              << endl;
     }
@@ -219,10 +220,11 @@ class StudentManagement {
         if (foundStudents.empty()) {
             cout << "No students found with the given name.\n";
         } else {
-            cout << "----------------------------------------------------------"
-                    "-----------------------------------------"
-                 << endl;
-            cout << "| " << setw(3) << "ID"
+             cout << "-------------------------------------------------------"
+                "-------------------------------------"
+             << endl;
+
+        cout << "| " << setw(3) << "ID"
              << " | " << setw(18) << "Name"
              << " | " << setw(3) << "Age"
              << " | " << setw(10) << "Math"
@@ -230,15 +232,15 @@ class StudentManagement {
              << " | " << setw(13) << "Physics"
              << " | " << setw(10) << "Type"
              << " |" << endl;
-            cout << "----------------------------------------------------------"
-                    "-----------------------------------------"
-                 << endl;
-            for (Student &foundStudent : foundStudents) {
-                foundStudent.displayStudent();
-            }
-            cout << "----------------------------------------------------------"
-                    "-----------------------------------------"
-                 << endl;
+        cout << "--------------------------------------------------------"
+                "-------------------------------------"
+             << endl;
+        for (Student &s : students) {
+            s.displayStudent();
+        }
+        cout << "-------------------------------------------------------"
+                "-------------------------------------"
+             << endl;
         }
     }
 
@@ -323,7 +325,7 @@ int main() {
         cout << "| 1. Add Student                             |" << endl;
         cout << "| 2. Remove Student                          |" << endl;
         cout << "| 3. Edit Student Information                |" << endl;
-        cout << "| 4. Search Student by Name                  |" << endl;
+        cout << "| 4. Search Student by ID                    |" << endl;
         cout << "| 0. Exit                                    |" << endl;
         cout << "---------------------------------------------" << endl;
 
@@ -350,6 +352,9 @@ int main() {
                 break;
         }
     } while (choose != 0);
+  cout << RED << BOLD << "End student management system" << RESET <<endl;
+
+    system("pause >nul");
 
     return 0;
 }
