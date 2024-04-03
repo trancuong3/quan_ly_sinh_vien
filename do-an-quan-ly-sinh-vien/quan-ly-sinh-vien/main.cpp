@@ -352,9 +352,12 @@ int main() {
                 break;
         }
     } while (choose != 0);
-  cout << RED << BOLD << "End student management system" << RESET <<endl;
+  cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" ;
+  cout << RED << BOLD <<"End student management system";
 
-    system("pause >nul");
+  cout<<WHITE<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
+
+    system("pause ->nul");
 
     return 0;
 }
