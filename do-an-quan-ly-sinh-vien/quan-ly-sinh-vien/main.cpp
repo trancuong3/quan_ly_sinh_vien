@@ -34,12 +34,24 @@ using namespace std;
 #define MAGENTA "\033[35m"
 #define CYAN "\033[36m"
 #define WHITE "\033[37m"
-#define BOLD    "\033[1m"
-
-class Student {
-   private:
+class Person {
+   protected:
     string name;
     int age;
+
+   public:
+    Person() {}
+    Person(string n, int a) : name(n), age(a) {}
+
+    string getName() const { return name; }
+    void setName(string n) { name = n; }
+
+    int getAge() const { return age; }
+    void setAge(int a) { age = a; }
+};
+
+class Student : public Person {
+   private:
     int studentID;  // id student
     double math;
     double english;
@@ -49,20 +61,12 @@ class Student {
    public:
     Student() {}
     Student(int id, string n, int a, double m, double e, double p)
-        : name(n), age(a), studentID(id), math(m), english(e), physics(p) {
+        : Person(n, a), studentID(id), math(m), english(e), physics(p) {
         mediumScore = (math + english + physics) / 3;
     }
     int getStudentID() const { return studentID; }
 
     void setStudentID(int id) { studentID = id; }
-
-    string getName() const { return name; }
-
-    void setName(string n) { name = n; }
-
-    int getAge() { return age; }
-
-    void setAge(int a) { age = a; }
 
     double getMath() { return math; }
 
@@ -78,9 +82,9 @@ class Student {
 
     void checkPass() const {
         if (mediumScore > 4) {
-            cout <<BOLD<< GREEN << "PASS " << RESET;
+            cout << GREEN << "PASS " << RESET;
         } else {
-            cout <<BOLD <<RED << "NOT PASS  " << RESET;
+            cout << RED << "NOT PASS  " << RESET;
         }
     }
 
@@ -143,7 +147,7 @@ class StudentManagement {
         cout << "-------------------------------------------------------"
                 "-------------------------------------"
              << endl;
-
+        // Print blank space to center "List Students"
         cout << "| " << setw(3) << "ID"
              << " | " << setw(18) << "Name"
              << " | " << setw(3) << "Age"
@@ -152,7 +156,7 @@ class StudentManagement {
              << " | " << setw(13) << "Physics"
              << " | " << setw(10) << "Type"
              << " |" << endl;
-        cout << "--------------------------------------------------------"
+        cout << "-------------------------------------------------------"
                 "-------------------------------------"
              << endl;
         for (Student &s : students) {
@@ -220,27 +224,26 @@ class StudentManagement {
         if (foundStudents.empty()) {
             cout << "No students found with the given name.\n";
         } else {
-             cout << "-------------------------------------------------------"
-                "-------------------------------------"
-             << endl;
-
-        cout << "| " << setw(3) << "ID"
-             << " | " << setw(18) << "Name"
-             << " | " << setw(3) << "Age"
-             << " | " << setw(10) << "Math"
-             << " | " << setw(13) << "English"
-             << " | " << setw(13) << "Physics"
-             << " | " << setw(10) << "Type"
-             << " |" << endl;
-        cout << "--------------------------------------------------------"
-                "-------------------------------------"
-             << endl;
-        for (Student &s : students) {
-            s.displayStudent();
-        }
-        cout << "-------------------------------------------------------"
-                "-------------------------------------"
-             << endl;
+            cout << "---------------------------------------------------"
+                    "-----------------------------------------"
+                 << endl;
+            cout << "| " << setw(3) << "ID"
+                 << " | " << setw(18) << "Name"
+                 << " | " << setw(3) << "Age"
+                 << " | " << setw(10) << "Math"
+                 << " | " << setw(13) << "English"
+                 << " | " << setw(13) << "Physics"
+                 << " | " << setw(10) << "Type"
+                 << " |" << endl;
+            cout << "---------------------------------------------------"
+                    "-----------------------------------------"
+                 << endl;
+            for (Student &foundStudent : foundStudents) {
+                foundStudent.displayStudent();
+            }
+            cout << "---------------------------------------------------"
+                    "-----------------------------------------"
+                 << endl;
         }
     }
 
@@ -294,7 +297,7 @@ int main() {
     StudentManagement manager;
     Student s1(1, "Nguyen Van An", 20, 4, 2, 1);
     manager.addStudent(s1);
-    Student s2(2, "Nguyen Van BA", 21, 10, 3, 2);
+    Student s2(2, "Nguyen Van Ba", 21, 10, 3, 2);
     manager.addStudent(s2);
     Student s3(3, "Le Van Cuong", 22, 6, 5, 7);
     manager.addStudent(s3);
@@ -325,7 +328,7 @@ int main() {
         cout << "| 1. Add Student                             |" << endl;
         cout << "| 2. Remove Student                          |" << endl;
         cout << "| 3. Edit Student Information                |" << endl;
-        cout << "| 4. Search Student by ID                    |" << endl;
+        cout << "| 4. Search Student by Name                  |" << endl;
         cout << "| 0. Exit                                    |" << endl;
         cout << "---------------------------------------------" << endl;
 
@@ -352,12 +355,6 @@ int main() {
                 break;
         }
     } while (choose != 0);
-  cout <<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" ;
-  cout << RED << BOLD <<"End student management system";
-
-  cout<<WHITE<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-
-    system("pause ->nul");
 
     return 0;
 }
