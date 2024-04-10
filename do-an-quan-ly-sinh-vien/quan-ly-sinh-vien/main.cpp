@@ -44,9 +44,11 @@ class Person {
     Person(string n, int a) : name(n), age(a) {}
 
     string getName() const { return name; }
+
     void setName(string n) { name = n; }
 
     int getAge() const { return age; }
+
     void setAge(int a) { age = a; }
 };
 
@@ -56,14 +58,22 @@ class Student : public Person {
     double math;
     double english;
     double physics;
-    double mediumScore;
+    double avarageScore;
 
    public:
     Student() {}
     Student(int id, string n, int a, double m, double e, double p)
         : Person(n, a), studentID(id), math(m), english(e), physics(p) {
-        mediumScore = (math + english + physics) / 3;
+        avarageScore = (math + english + physics) / 3;
     }
+    string getName() const { return name; }
+
+    void setName(string n) { name = n; }
+
+    int getAge() const { return age; }
+
+    void setAge(int a) { age = a; }
+
     int getStudentID() const { return studentID; }
 
     void setStudentID(int id) { studentID = id; }
@@ -80,8 +90,10 @@ class Student : public Person {
 
     void setEnglish(double e) { english = e; }
 
+    double getAvarageScore() const { return (math + english + physics) / 3; }
+
     void checkPass() const {
-        if (mediumScore > 4) {
+        if (avarageScore > 4) {
             cout << GREEN << "PASS " << RESET;
         } else {
             cout << RED << "NOT PASS  " << RESET;
@@ -102,7 +114,7 @@ class Student : public Person {
         cout << setw(13) << physics << RESET << " | ";
 
         checkPass();
-        cout << setw(10 - (mediumScore > 4 ? 3 : 8)) << " |" << endl;
+        cout << setw(10 - (avarageScore > 4 ? 3 : 8)) << " |" << endl;
     }
 
     string getLastName() const {
@@ -141,11 +153,16 @@ class StudentManagement {
         return a.getLastName() < b.getLastName();
     }
 
+   public:
+    static bool compareAvarageScores(const Student &a, const Student &b) {
+        return a.getAvarageScore() > b.getAvarageScore();
+    }
+
     void addStudent(Student &s) { students.push_back(s); }
 
     void displayStudents() {
-        cout << "-------------------------------------------------------"
-                "-------------------------------------"
+        cout << "--------------------------------------------------------------"
+                "------------------------------"
              << endl;
         // Print blank space to center "List Students"
         cout << "| " << setw(3) << "ID"
@@ -156,14 +173,14 @@ class StudentManagement {
              << " | " << setw(13) << "Physics"
              << " | " << setw(10) << "Type"
              << " |" << endl;
-        cout << "-------------------------------------------------------"
-                "-------------------------------------"
+        cout << "--------------------------------------------------------------"
+                "------------------------------"
              << endl;
         for (Student &s : students) {
             s.displayStudent();
         }
-        cout << "-------------------------------------------------------"
-                "-------------------------------------"
+        cout << "--------------------------------------------------------------"
+                "------------------------------"
              << endl;
     }
 
@@ -193,7 +210,7 @@ class StudentManagement {
         Student newStudent(students.size() + 1, name, age, math, english,
                            physics);
         students.push_back(newStudent);
-        reSortList();
+        sortByName();
     }
 
     void removeStudent() {
@@ -224,8 +241,8 @@ class StudentManagement {
         if (foundStudents.empty()) {
             cout << "No students found with the given name.\n";
         } else {
-            cout << "---------------------------------------------------"
-                    "-----------------------------------------"
+            cout << "----------------------------------------------------------"
+                    "----------------------------------"
                  << endl;
             cout << "| " << setw(3) << "ID"
                  << " | " << setw(18) << "Name"
@@ -235,14 +252,14 @@ class StudentManagement {
                  << " | " << setw(13) << "Physics"
                  << " | " << setw(10) << "Type"
                  << " |" << endl;
-            cout << "---------------------------------------------------"
-                    "-----------------------------------------"
+            cout << "----------------------------------------------------------"
+                    "----------------------------------"
                  << endl;
             for (Student &foundStudent : foundStudents) {
                 foundStudent.displayStudent();
             }
-            cout << "---------------------------------------------------"
-                    "-----------------------------------------"
+            cout << "----------------------------------------------------------"
+                    "----------------------------------"
                  << endl;
         }
     }
@@ -280,13 +297,19 @@ class StudentManagement {
                 st1 = studentEdit;
             }
         }
-        reSortList();
+        sortByName();
     }
 
     bool empty() { return students.empty(); }
 
-    void reSortList() {
+    void sortByName() {
         sort(students.begin(), students.end(), compareNames);
+        for (int i = 0; i < students.size(); i++) {
+            students[i].setStudentID(i + 1);
+        }
+    }
+    void sortByAvarageScore() {
+        sort(students.begin(), students.end(), compareAvarageScores);
         for (int i = 0; i < students.size(); i++) {
             students[i].setStudentID(i + 1);
         }
@@ -316,21 +339,24 @@ int main() {
     Student s10(5, "Hoang Van Duong", 24, 8, 9, 10);
     manager.addStudent(s10);
 
-    manager.reSortList();
+    manager.sortByName();
     manager.displayStudents();
 
     int choose;
+    bool sort = false;
     do {
-        cout << "\n---------------------------------------------" << endl;
-        cout << "|          Student Management System         |" << endl;
-        cout << "|--------------------------------------------|  " << endl;
-        cout << "| Options:                                   |" << endl;
-        cout << "| 1. Add Student                             |" << endl;
-        cout << "| 2. Remove Student                          |" << endl;
-        cout << "| 3. Edit Student Information                |" << endl;
-        cout << "| 4. Search Student by Name                  |" << endl;
-        cout << "| 0. Exit                                    |" << endl;
-        cout << "---------------------------------------------" << endl;
+        cout<< MAGENTA << "\n---------------------------------------------" << endl;
+        cout<< MAGENTA << "|" ;cout<<GREEN<<"         Student Management System"<< MAGENTA<<"          |"<< endl;
+        cout<< MAGENTA << "|--------------------------------------------|  " << endl;
+        cout<< MAGENTA  << "|";cout<< WHITE<< "Options:";cout<<MAGENTA<<setw(37)<< "|" << endl;
+        cout<< MAGENTA  << "|";cout<<WHITE<<"1. Add Student";cout<<MAGENTA<<setw(31)<<  "|" << endl;
+        cout<< MAGENTA  << "|";cout<<WHITE<< "2. Remove Student";cout<<MAGENTA <<setw(28) <<  "|" << endl;
+        cout<< MAGENTA  << "|";cout<<WHITE<< "3. Edit Student Information";cout<<MAGENTA<<setw(18) <<  "|" << endl;
+        cout<< MAGENTA  << "|";cout<<WHITE<< "4. Search Student by Name";cout<<MAGENTA<<setw(20) <<  "|" << endl;
+        cout<< MAGENTA  << "|";cout<<WHITE<< "5. Sort The List by Name / Average Score";cout<<MAGENTA<<setw(5)<<   "|" << endl;
+        cout<< MAGENTA  << "|";cout<<WHITE<< "0. Exit";cout<<MAGENTA <<setw(38)<<"|" << endl;
+        cout<< MAGENTA  << "---------------------------------------------" << endl;
+        cout<<WHITE<<"Enter your choice: ";
 
         cin >> choose;
 
@@ -353,8 +379,23 @@ int main() {
             case 4:
                 manager.searchStudent();
                 break;
+            case 5:
+                // The default is sort by name
+                if (sort == true) {
+                    manager.sortByName();
+                    sort = false;
+                    cout << "Students Sorted by Names: " << endl;
+                    manager.displayStudents();
+                } else {
+                    manager.sortByAvarageScore();
+                    sort = true;
+                    cout << "Students Sorted by Avarage Scores: " << endl;
+                    manager.displayStudents();
+                }
+                break;
         }
     } while (choose != 0);
-
+    cout<<GREEN<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";cout<<RED<<"END SYSTEM";cout<<GREEN<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<endl;
+system("pause > nul");
     return 0;
 }
